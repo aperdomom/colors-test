@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -48,6 +49,8 @@ public class BluetoothFragment extends Fragment {
     private BeaconManager beaconManager;
     private BeaconConsumer beaconConsumer;
     private BootstrapNotifier application;
+    Context context;
+    TextView textView;
     private final BroadcastReceiver receiver = new BroadcastReceiver(){
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -55,7 +58,8 @@ public class BluetoothFragment extends Fragment {
             if(BluetoothDevice.ACTION_FOUND.equals(action)) {
                 int  rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI,Short.MIN_VALUE);
                 String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
-                Toast.makeText(context, "Device: " + name + ",  RSSI: " + rssi + "dBm", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Device: " + name + ",  RSSI: " + rssi + "dBm", Toast.LENGTH_SHORT).show();
+                textView.setText(textView.getText()+ " Device: " + name + ",  RSSI: " + rssi + "dBm\n");
             }
         }
     };
@@ -80,6 +84,7 @@ public class BluetoothFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getActivity().getApplicationContext();
         if (getArguments() != null) {
             mSection = getArguments().getInt(ARG_SECTION_NUMBER);
         }
@@ -106,6 +111,7 @@ public class BluetoothFragment extends Fragment {
                 BTAdapter.startDiscovery();
             }
         });
+        textView = (TextView) contentView.findViewById(R.id.text);
 
         return contentView;
     }
@@ -148,17 +154,16 @@ public class BluetoothFragment extends Fragment {
                 @Override
                 public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                     if (beacons.size() > 0) {
-                        Toast.makeText(getActivity(),
-                                "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.",
-                                Toast.LENGTH_SHORT).show();
                         Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                    }else {
+                        Log.i(TAG, "Non Devices found");
                     }
                 }
             });
 
             try {
                 Region _tagRegion = new Region("myUniqueBeaconId",
-                        Identifier.parse("2F234454-CF6D-4A0F-ADF2-F4911BA9FFA6"),
+                        null,
                         null, null);
 
                 beaconManager.startRangingBeaconsInRegion(_tagRegion);
