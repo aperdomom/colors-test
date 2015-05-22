@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity
                 tag = "BLUETOOTH";
                 break;
             default :
-                fragment = MapFragment.newInstance(position + 1);
+                fragment = GPSFragment.newInstance(position + 1);
                 tag = "GPS";
                 break;
         }

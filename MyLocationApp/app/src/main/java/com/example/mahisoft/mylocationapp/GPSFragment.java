@@ -1,6 +1,9 @@
 package com.example.mahisoft.mylocationapp;
 
 import android.app.Activity;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,10 +18,10 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * { MapFragment. OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MapFragment#newInstance} factory method to
+ * Use the {@link GPSFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment {
+public class GPSFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private int mSection;
@@ -28,17 +31,17 @@ public class MapFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     * @return A new instance of fragment MapFragment.
+     * @return A new instance of fragment GPSFragment.
      */
-    public static MapFragment newInstance(int sectionNumber) {
-        MapFragment fragment = new MapFragment();
+    public static GPSFragment newInstance(int sectionNumber) {
+        GPSFragment fragment = new GPSFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MapFragment() {
+    public GPSFragment() {
         // Required empty public constructor
     }
 
@@ -48,6 +51,26 @@ public class MapFragment extends Fragment {
         if (getArguments() != null) {
             mSection = getArguments().getInt(ARG_SECTION_NUMBER);
         }
+
+        // Acquire a reference to the system Location Manager
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                // makeUseOfNewLocation(location);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        // Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
     @Override
@@ -97,5 +120,8 @@ public class MapFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }*/
+
+
+
 
 }
