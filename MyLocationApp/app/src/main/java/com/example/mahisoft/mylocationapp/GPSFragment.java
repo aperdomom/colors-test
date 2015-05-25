@@ -51,7 +51,7 @@ public class GPSFragment extends Fragment {
         if (getArguments() != null) {
             mSection = getArguments().getInt(ARG_SECTION_NUMBER);
         }
-        
+
     }
 
     @Override
